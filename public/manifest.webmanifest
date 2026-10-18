@@ -1,0 +1,19 @@
+{
+  "name": "Cờ Ca Rô",
+  "short_name": "Ca Rô",
+  "description": "Game cờ ca rô dễ thương: chơi với máy hoặc online cùng bạn bè",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffe3ef",
+  "theme_color": "#ffe3ef",
+  "lang": "vi",
+  "categories": ["games"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

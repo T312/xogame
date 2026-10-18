@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffe3ef" />
+  <meta name="description" content="Game cờ ca rô dễ thương: chơi với máy hoặc online cùng bạn bè" />
+  <title>Cờ Ca Rô 🌸</title>
+
+  <!-- PWA: cài lên màn hình chính iOS / Android -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Ca Rô" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+
+  <main class="app">
+    <header class="hero">
+      <h1>Cờ Ca Rô <span class="spark">✿</span></h1>
+      <p>Xếp 5 quân liên tiếp để chiến thắng nhé!</p>
+    </header>
+
+    <section class="scoreboard" aria-label="Bảng điểm">
+      <div class="score x" id="scoreX">
+        <div class="avatar">🐱</div>
+        <div class="who" id="nameX">Mèo (X)</div>
+        <div class="num" id="winsX">0</div>
+      </div>
+      <div class="score draw">
+        <div class="avatar">🤝</div>
+        <div class="who">Hòa</div>
+        <div class="num" id="draws">0</div>
+      </div>
+      <div class="score o" id="scoreO">
+        <div class="avatar">🐰</div>
+        <div class="who" id="nameO">Thỏ (O)</div>
+        <div class="num" id="winsO">0</div>
+      </div>
+    </section>
+
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+
+    <!-- Sảnh online: tạo phòng / vào phòng -->
+    <section class="panel lobby" id="lobby" hidden>
+      <h2>🌐 Chơi online cùng bạn bè</h2>
+      <button class="btn primary big" id="createRoom">✨ Tạo phòng mới</button>
+      <div class="or">hoặc nhập mã phòng của bạn bè</div>
+      <form class="join-row" id="joinForm" autocomplete="off">
+        <input id="roomCode" maxlength="4" placeholder="MÃ PHÒNG" inputmode="text" autocapitalize="characters" spellcheck="false" aria-label="Mã phòng" />
+        <button class="btn" type="submit" id="joinRoom">Vào phòng</button>
+      </form>
+      <p class="hint" id="lobbyMsg"></p>
+    </section>
+
+    <!-- Thông tin phòng khi đã vào -->
+    <section class="panel room" id="roomInfo" hidden>
+      <div class="room-code">Mã phòng <b id="roomCodeText">----</b></div>
+      <div class="row">
+        <button class="btn" id="copyLink">🔗 Sao chép link mời</button>
+        <button class="btn ghost" id="leaveRoom">🚪 Rời phòng</button>
+      </div>
+      <div class="emotes" id="emotes" hidden aria-label="Gửi biểu cảm">
+        <button type="button" data-e="😀">😀</button>
+        <button type="button" data-e="😭">😭</button>
+        <button type="button" data-e="😡">😡</button>
+        <button type="button" data-e="🎉">🎉</button>
+        <button type="button" data-e="👍">👍</button>
+        <button type="button" data-e="💖">💖</button>
+        <button type="button" data-e="🤔">🤔</button>
+        <button type="button" data-e="🙈">🙈</button>
+      </div>
+    </section>
+
+    <div class="board-wrap" id="boardWrap">
+      <div id="board" class="board" role="grid" aria-label="Bàn cờ ca rô"></div>
+    </div>
+
+    <!-- Chat trong phòng online -->
+    <section class="panel chat" id="chat" hidden>
+      <button type="button" class="chat-head" id="chatToggle" aria-expanded="true" aria-controls="chatBody">
+        <span>💬 Trò chuyện</span>
+        <span class="badge" id="chatBadge" hidden>0</span>
+        <span class="chev" aria-hidden="true">▾</span>
+      </button>
+      <div class="chat-body" id="chatBody">
+        <div class="chat-log" id="chatLog" role="log" aria-live="polite"></div>
+        <form class="chat-form" id="chatForm" autocomplete="off">
+          <input id="chatInput" maxlength="200" placeholder="Nhắn gì đó cho bạn… 💬" enterkeyhint="send" aria-label="Tin nhắn" />
+          <button class="btn primary" type="submit">Gửi</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="row">
+        <label class="field">
+          <span>Chế độ</span>
+          <select id="mode">
+            <option value="ai">Chơi với máy 🤖</option>
+            <option value="pvp">Hai người 1 máy 👫</option>
+            <option value="online">Online với bạn bè 🌐</option>
+          </select>
+        </label>
+        <label class="field" id="levelField">
+          <span>Độ khó</span>
+          <select id="level">
+            <option value="easy">Dễ 🍼</option>
+            <option value="medium" selected>Vừa 🍬</option>
+            <option value="hard">Khó 🔥</option>
+          </select>
+        </label>
+        <label class="field" id="sideField">
+          <span>Bạn cầm</span>
+          <select id="side">
+            <option value="X">X (đi trước)</option>
+            <option value="O">O (đi sau)</option>
+          </select>
+        </label>
+      </div>
+      <div class="row buttons">
+        <button class="btn primary" id="newBtn">🎀 Ván mới</button>
+        <button class="btn" id="undoBtn">↩️ Đi lại</button>
+        <button class="btn ghost" id="soundBtn" aria-pressed="true">🔔 Âm thanh</button>
+        <button class="btn ghost" id="resetBtn">🧹 Xóa điểm</button>
+        <button class="btn ghost" id="installBtn" hidden>📲 Cài app</button>
+      </div>
+      <p class="install-hint" id="installHint" hidden>
+        Trên iPhone/iPad: mở bằng <b>Safari</b>, bấm nút <b>Chia sẻ</b> ⬆️ rồi chọn <b>“Thêm vào MH chính”</b> 🌸
+      </p>
+    </section>
+
+    <footer class="foot">Làm với 💖 · Không cần đăng nhập, không lưu dữ liệu vào database</footer>
+  </main>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal-card">
+      <div class="modal-emoji" id="modalEmoji">🎉</div>
+      <h2 id="modalTitle">Chiến thắng!</h2>
+      <p id="modalText"></p>
+      <div class="modal-actions">
+        <button class="btn primary" id="modalNew">Chơi tiếp nào</button>
+        <button class="btn ghost" id="modalClose">Xem bàn cờ</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <div class="emote-layer" id="emoteLayer" aria-hidden="true"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
