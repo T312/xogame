@@ -1,0 +1,17 @@
+{
+  "name": "caro-game",
+  "version": "2.0.0",
+  "description": "Game Cờ Ca Rô dễ thương - chơi với máy hoặc online 2 người, không cần database",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "ws": "^8.18.0"
+  },
+  "license": "MIT"
+}
